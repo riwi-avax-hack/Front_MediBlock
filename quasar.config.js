@@ -21,7 +21,7 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-
+      'pinia',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
@@ -85,8 +85,8 @@ module.exports = configure(function (/* ctx */) {
     devServer: {
       open: true,
       headers: {
-        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
-        'Cross-Origin-Embedder-Policy': 'unsafe-none'
+        // 'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+        // 'Cross-Origin-Embedder-Policy': 'unsafe-none'
       }
     },
 
