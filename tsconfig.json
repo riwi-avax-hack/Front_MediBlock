@@ -10,5 +10,12 @@
     "./src-capacitor",
     "./src-cordova",
     "./quasar.config.*.temporary.compiled*"
+  ],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src-pwa/**/*.ts",
+    "src-pwa/**/*.js"
   ]
 }
