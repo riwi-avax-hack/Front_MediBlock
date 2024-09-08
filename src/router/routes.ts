@@ -11,12 +11,8 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/auth/Login.vue'),
   },
   {
-    path: '/user-register',
+    path: '/register',
     component: () => import('pages/sign-up/UserRegistration.vue'),
-  },
-  {
-    path: '/entity-register',
-    component: () => import('pages/sign-up/EntityRegistration.vue'),
   },
 
   // Always leave this as last one,
