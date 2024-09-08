@@ -101,7 +101,7 @@ async function handleLogin() {
 
 function redirectToGoogle() {
   const googleAuthUrl =
-    'https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=221195599762-neb9eb6vk2adgeh2bu6vou1bsqh3ugle.apps.googleusercontent.com&redirect_uri=http://localhost:9000&scope=email profile';
+    'https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=221195599762-neb9eb6vk2adgeh2bu6vou1bsqh3ugle.apps.googleusercontent.com&redirect_uri=https://avalanche.kevinmejia.com.co/landing&scope=email profile';
   window.location.href = googleAuthUrl;
 }
 
