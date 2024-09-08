@@ -33,6 +33,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('pages/IndexPage.vue'),
   },
 
+  {
+    path: '/register',
+    component: () => import('pages/sign-up/UserRegistration.vue'),
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
