@@ -4,16 +4,18 @@
       <q-toolbar>
         <!-- Título de la cabecera -->
         <q-toolbar-title>
-          <q-img
-            src="../assets/logo-removebg.png"
-            spinner-color="white"
-            style="height: 60px; max-width: 60px"
-          />
-          MediBlock
+          <router-link to="/landing" class="register-link">
+            <q-img
+              src="../assets/logo-removebg.png"
+              spinner-color="white"
+              style="height: 60px; max-width: 60px"
+            />
+            <span class="textLog">MediBlock</span>
+          </router-link>
         </q-toolbar-title>
 
         <div class="info-user">
-          <p v-if="isAuthenticated" class="">{{ userInfo?.name }}</p>
+          <p v-if="isAuthenticated" class="">{{ userInfo?.names }}</p>
           <p>Paciente</p>
         </div>
 
@@ -106,5 +108,12 @@ function handleChangeVisible() {
     font-size: 14px;
     font-weight: 500;
   }
+}
+
+.textLog {
+  font-size: 30px;
+  font-weight: 500;
+  color: white;
+  text-decoration: none !important;
 }
 </style>

@@ -1,8 +1,28 @@
 <template>
-  <div class="q-pa-md" style="max-width: 400px; margin: 0 auto">
-    <q-card>
+  <div
+    class="q-pa-md"
+    style="
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #0d47a1, #002171);
+      justify-content: center;
+    "
+  >
+    <q-card style="width: 500px">
       <q-card-section>
-        <div class="text-h6">Iniciar Sesión</div>
+        <div class="text-h6 text-center">Iniciar Sesión</div>
+        <div
+          style="display: flex; align-items: center; justify-content: center"
+        >
+          <img
+            src="../../assets/logo-removebg.png"
+            spinner-color="white"
+            style="height: 150px; max-width: 150px; text-align: center"
+          />
+        </div>
       </q-card-section>
 
       <q-card-section>
@@ -30,6 +50,13 @@
             class="full-width q-mt-md"
           />
         </q-form>
+
+        <!-- Texto para redirigir a la página de registro -->
+        <div class="q-mt-md text-center">
+          <router-link to="/register" class="register-link">
+            ¿No tienes una cuenta aún? <strong>Regístrate</strong>
+          </router-link>
+        </div>
       </q-card-section>
 
       <q-separator />
@@ -51,38 +78,33 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useAuthStore } from 'src/stores/auth';
+import { useRouter } from 'vue-router';
 
 defineOptions({
   name: 'login-page',
 });
 
 const authStore = useAuthStore();
+const router = useRouter();
 
-// Estados del formulario de usuario y contraseña
 const username = ref('');
 const password = ref('');
 
-// Función para manejar el login tradicional
-function handleLogin() {
-  // Aquí implementarías la lógica para autenticar con el backend
+async function handleLogin() {
   if (username.value && password.value) {
-    console.log('Usuario:', username.value);
-    console.log('Contraseña:', password.value);
-    authStore.login({ email: username.value, password: password.value });
-    // Implementa tu lógica para validar las credenciales del usuario
+    await authStore.login({ email: username.value, password: password.value });
+    router.push('/');
   } else {
     console.error('Campos incompletos');
   }
 }
 
-// Redirigir a Google para autenticación
 function redirectToGoogle() {
   const googleAuthUrl =
     'https://accounts.google.com/o/oauth2/v2/auth?response_type=token&client_id=221195599762-neb9eb6vk2adgeh2bu6vou1bsqh3ugle.apps.googleusercontent.com&redirect_uri=http://localhost:9000&scope=email profile';
   window.location.href = googleAuthUrl;
 }
 
-// Extraer el token de la URL después de redireccionar
 function getTokenFromUrl() {
   const hash = window.location.hash;
 
@@ -109,5 +131,14 @@ onMounted(() => {
 <style scoped>
 .full-width {
   width: 100%;
+}
+
+.register-link {
+  color: #757575; /* Gris claro */
+  font-size: 14px;
+}
+
+.register-link:hover {
+  color: #000; /* Color más oscuro al hacer hover */
 }
 </style>

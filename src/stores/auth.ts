@@ -1,29 +1,34 @@
 import { defineStore } from 'pinia';
 import ClientHTTP from 'src/api/ClientHTTP';
-import { ILoginResp } from 'src/model/auth/simple-login';
+import { ILoginResp, IUser } from 'src/model/auth/simple-login';
 import { Router } from 'vue-router';
 
-interface UserInfo {
-  id: string;
+interface UserInfoGoogle {
   email: string;
+  family_name: string;
+  given_name: string;
+  id: string;
   name: string;
   picture: string;
+  verified_email: boolean;
 }
 
 interface AuthState {
   token: string | null;
-  userInfo: UserInfo | null;
+  userInfo: IUser | null;
+  error?: boolean;
 }
 
 export const useAuthStore = defineStore('auth', {
   state: (): AuthState => ({
     token: null,
     userInfo: null,
+    error: false,
   }),
 
   getters: {
     isAuthenticated: (state: AuthState): boolean => !!state.userInfo,
-    getUserInfo: (state: AuthState): UserInfo | null => state.userInfo,
+    getUserInfo: (state: AuthState): IUser | null => state.userInfo,
   },
 
   actions: {
@@ -31,34 +36,43 @@ export const useAuthStore = defineStore('auth', {
       credentials: { email: string; password: string },
       isAuthGoogle: boolean = false
     ) {
+      this.error = false;
       if (!isAuthGoogle) {
         try {
           const response: ILoginResp = await ClientHTTP.post(
             '/auth',
             credentials
           );
-          this.setToken(response.data.access_token);
-        } catch (error) {}
+          this.setToken(response.data.token.access_token);
+          this.setUserInfo(response.data.user);
+        } catch (error) {
+          this.error = true;
+        }
       } else {
-        const response: ILoginResp = await ClientHTTP.get(
-          `/users/filter-by-email/${credentials.email}`
-        );
-        console.log(response);
+        try {
+          const response: ILoginResp = await ClientHTTP.get(
+            `/users/filter-by-email/${credentials.email}`
+          );
+          this.setToken(response.data.token.access_token);
+          this.setUserInfo(response.data.user);
+        } catch (error) {
+          this.error = true;
+        }
       }
     },
 
     async setToken(token: string) {
       this.token = token;
-      localStorage.setItem('google_access_token', token);
+      localStorage.setItem('access_token', token);
       await this.getUserInfoGoogle(token);
     },
-    setUserInfo(userInfo: UserInfo) {
+    setUserInfo(userInfo: IUser) {
       this.userInfo = userInfo;
       localStorage.setItem('user', JSON.stringify(userInfo));
     },
 
     loadToken() {
-      const token = localStorage.getItem('google_access_token');
+      const token = localStorage.getItem('access_token');
       const user = localStorage.getItem('user');
       if (token) this.token = token;
       if (user) this.userInfo = JSON.parse(user);
@@ -67,7 +81,7 @@ export const useAuthStore = defineStore('auth', {
     logOut(router: Router) {
       this.token = null;
       this.userInfo = null;
-      localStorage.removeItem('google_access_token');
+      localStorage.removeItem('access_token');
       localStorage.removeItem('user');
       router.push('/login');
     },
@@ -82,8 +96,8 @@ export const useAuthStore = defineStore('auth', {
             },
           }
         );
-        const userInfo = await response.json();
-        this.setUserInfo(userInfo);
+        const userInfo: UserInfoGoogle = await response.json();
+        this.login({ email: userInfo.email, password: userInfo.id }, true);
       } catch (error) {
         console.error('Error al obtener la información del usuario:', error);
       }
