@@ -68,6 +68,7 @@ function handleLogin() {
   if (username.value && password.value) {
     console.log('Usuario:', username.value);
     console.log('Contraseña:', password.value);
+    authStore.login({ email: username.value, password: password.value });
     // Implementa tu lógica para validar las credenciales del usuario
   } else {
     console.error('Campos incompletos');
@@ -92,29 +93,9 @@ function getTokenFromUrl() {
     if (token) {
       console.log('Token obtenido:', token);
       authStore.setToken(token);
-      getUserInfo(token);
     } else {
       console.error('No se encontró token en la URL');
     }
-  }
-}
-
-// Obtener la información del usuario usando el token de Google
-async function getUserInfo(token: string) {
-  try {
-    const response = await fetch(
-      'https://www.googleapis.com/oauth2/v1/userinfo?alt=json',
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const userInfo = await response.json();
-    console.log('Información del usuario:', userInfo);
-    authStore.setUserInfo(userInfo);
-  } catch (error) {
-    console.error('Error al obtener la información del usuario:', error);
   }
 }
 

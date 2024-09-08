@@ -23,7 +23,7 @@ export default route(function (/* { store, ssrContext } */) {
   // Añadir el guard de autenticación
   Router.beforeEach((to, from, next) => {
     const authStore = useAuthStore();
-
+    authStore.loadToken();
     // Comprobar si hay un token en la URL (Google redirige con #access_token)
     const hash = window.location.hash;
     if (hash.includes('access_token')) {
@@ -38,6 +38,7 @@ export default route(function (/* { store, ssrContext } */) {
       }
     }
 
+    console.log(to.path && authStore.isAuthenticated);
     // Verificar si la ruta requiere autenticación
     if (to.meta.requiresAuth && !authStore.isAuthenticated) {
       // Si no está autenticado, redirigir a la página de login
